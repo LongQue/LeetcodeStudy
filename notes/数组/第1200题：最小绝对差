@@ -1,0 +1,43 @@
+# 最小绝对差
+Leetcode第1200题：最小绝对差。难度为Easy，通过率61.9%  
+链接：https://leetcode-cn.com/problems/minimum-absolute-difference
+# 题目描述
+    给你个整数数组 arr，其中每个元素都 不相同。
+    请你找到所有具有最小绝对差的元素对，并且按升序的顺序返回。
+    示例 1：
+    输入：arr = [4,2,1,3]
+    输出：[[1,2],[2,3],[3,4]]
+    示例 2：
+    输入：arr = [1,3,6,10,15]
+    输出：[[1,3]]
+    示例 3：
+    输入：arr = [3,8,-10,23,19,-4,-14,27]
+# 解题
+个人流程：5分钟思路(√)->30分编码(√)->25ms,54.5M,94.02%
+## 思路解析
+逻辑题思路清晰  
+1、元素大小分散不利于取最小值，先从大到小排序（避免去绝对值），才用前减后获取最小差  
+2、存数据，第一种遍历两遍，第一遍找最小差，第二遍判断是否与最小差相等存数据；第二种，边找边存，做到存储数据的替换  
+## 代码实现  
+```java
+public List<List<Integer>> minimumAbsDifference(int[] arr) {
+        Arrays.sort(arr);
+        List<List<Integer>> lists = new ArrayList<>();
+        int temp = Integer.MAX_VALUE;
+        for (int i = 1; i < arr.length; i++)
+        {
+            if (arr[i] - arr[i - 1] < temp)
+            {
+                temp = arr[i] - arr[i - 1];
+                lists.clear();
+                List<Integer> list = Arrays.asList(arr[i - 1], arr[i]);
+                lists.add(list);
+            } else if (arr[i] - arr[i - 1] == temp)
+            {
+                List<Integer> list = Arrays.asList(arr[i - 1], arr[i]);
+                lists.add(list);
+            }
+        }
+        return lists;
+    }
+```
