@@ -1,5 +1,7 @@
 package main
 
+import "strings"
+
 /**
 3.数组中的重复数字
 在一个长度为 n 的数组 nums 里的所有数字都在 0～n-1 的范围内。数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。
@@ -41,4 +43,20 @@ func findNumberIn2DArray(matrix [][]int,target int) bool {
 		}
 	}
 	return false
+}
+
+/**
+5. 替换空格
+请实现一个函数，把字符串 s 中的每个空格替换成"%20"。
+示例 1：
+输入：s = "We are happy."
+输出："We%20are%20happy."
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+*/
+func replaceSpace(s string) string {
+	replace := strings.Replace(s, " ", "%20", -1)
+	return replace
 }
