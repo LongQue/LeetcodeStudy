@@ -60,3 +60,36 @@ func replaceSpace(s string) string {
 	replace := strings.Replace(s, " ", "%20", -1)
 	return replace
 }
+
+/**
+6、从尾到头打印链表
+输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。
+示例 1：
+输入：head = [1,3,2]
+输出：[2,3,1]
+限制：
+0 <= 链表长度 <= 10000
+先顺序读取出来O(n)，在翻转数组O(n/2)=O(n)
+ */
+func reversePrint(head *ListNode) []int {
+	if head== nil {
+		return []int{}
+	}
+	var res []int
+	for head!= nil {
+		res=append(res,head.Val)
+		head=head.Next
+	}
+	for i,j:=0,len(res)-1;i<j; {
+		res[i],res[j]=res[j],res[i]
+		i++
+		j--
+	}
+	return res
+}
+
+func main(){
+
+}
+
+
