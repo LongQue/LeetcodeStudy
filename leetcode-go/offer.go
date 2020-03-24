@@ -1,6 +1,8 @@
 package main
 
-import "strings"
+import (
+	"strings"
+)
 
 /**
 3.数组中的重复数字
@@ -27,14 +29,14 @@ func findRepeatNumber(nums []int) int {
 链接：https://leetcode-cn.com/problems/er-wei-shu-zu-zhong-de-cha-zhao-lcof
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 */
-func findNumberIn2DArray(matrix [][]int,target int) bool {
+func findNumberIn2DArray(matrix [][]int, target int) bool {
 
-	if len(matrix)==0{
+	if len(matrix) == 0 {
 		return false
 	}
-	row,col := 0,len(matrix[0]) - 1
+	row, col := 0, len(matrix[0])-1
 	for col > -1 && row < len(matrix) {
-		if matrix[row][col]==target {
+		if matrix[row][col] == target {
 			return true
 		} else if matrix[row][col] > target {
 			col--
@@ -70,26 +72,74 @@ func replaceSpace(s string) string {
 限制：
 0 <= 链表长度 <= 10000
 先顺序读取出来O(n)，在翻转数组O(n/2)=O(n)
- */
+*/
 func reversePrint(head *ListNode) []int {
-	if head== nil {
+	if head == nil {
 		return []int{}
 	}
 	var res []int
-	for head!= nil {
-		res=append(res,head.Val)
-		head=head.Next
+	for head != nil {
+		res = append(res, head.Val)
+		head = head.Next
 	}
-	for i,j:=0,len(res)-1;i<j; {
-		res[i],res[j]=res[j],res[i]
+	for i, j := 0, len(res)-1; i < j; {
+		res[i], res[j] = res[j], res[i]
 		i++
 		j--
 	}
 	return res
 }
 
-func main(){
+/**
+7.重建二叉树
+输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+例如，给出
+前序遍历 preorder = [3,9,20,15,7]
+中序遍历 inorder = [9,3,15,20,7]
+返回如下的二叉树：
+    3
+   / \
+  9  20
+    /  \
+   15   7
+限制：
+0 <= 节点个数 <= 5000
+题解：以前序遍历为顺序，每次取前序第一个节点，在中序遍历中找相等的值，该值左边即为当前节点的左子树，右边为右子树
+*/
+func buildTree(preorder []int, inorder []int) (Head *TreeNode) {
+	if len(inorder) == 0 {
+		return nil
+	}
+	vp := preorder[0]
+	for ii, vi := range inorder {
+		if vp == vi {
+			Head := &TreeNode{
+				Val:   vp,
+				Left:  buildTree(preorder[1:], inorder[:ii]),
+				Right: buildTree(preorder[1:], inorder[ii+1:]),
+			}
+			return Head
+		}
+	}
 
+	return
+}
+func main() {
+	var preorder = []int{3, 9, 20, 15, 7}
+	var inorder = []int{9, 3, 15, 20, 7}
+	tree := buildTree(preorder, inorder)
+	println(tree.Val)
 }
 
+//Definition for singly-linked list.
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
 
+//  Definition for a binary tree node.
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
