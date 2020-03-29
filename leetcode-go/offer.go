@@ -200,13 +200,12 @@ func fib(n int) int {
 	}
 	a, b, c := 0, 1, 0
 	for i := 2; i <= n; i++ {
-		c = (a + b)%1000000007
+		c = (a + b) % 1000000007
 		a = b
 		b = c
 	}
 	return c
 }
-
 
 /**
 面试题10- II. 青蛙跳台阶问题
@@ -223,18 +222,86 @@ func fib(n int) int {
 0 <= n <= 100
 
 n=0也算跳一次，这是最骚的
- */
+*/
 func numWays(n int) int {
 	if n < 2 {
 		return 1
 	}
 	a, b, c := 1, 1, 0
 	for i := 2; i <= n; i++ {
-		c = (a + b)%1000000007
+		c = (a + b) % 1000000007
 		a = b
 		b = c
 	}
 	return c
+}
+
+/**
+面试题11. 旋转数组的最小数字
+把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如，数组 [3,4,5,1,2] 为 [1,2,3,4,5] 的一个旋转，该数组的最小值为1。  
+示例 1：
+输入：[3,4,5,1,2]
+输出：1
+
+示例 2：
+输入：[2,2,2,0,1]
+输出：0
+注意：本题与主站 154 题相同：https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array-ii/
+
+注意排除三者left mid right都相同的情况
+*/
+func minArray(nums []int) int {
+	left, right := 0, len(nums)-1
+	mid := left
+	for nums[left] >= nums[right] {
+		if right-left == 1 {
+			mid = right
+			break
+		}
+		mid := (right-left)/2 + left
+		//三者相同，遍历
+		if nums[left] == nums[mid] && nums[mid] == nums[right] {
+			result := nums[left]
+			for left = left + 1; left < right; left++ {
+				if result > nums[left] {
+					result = nums[left]
+				}
+			}
+			return result
+		}
+		if nums[left] <= nums[mid] {
+			left = mid
+		} else {
+			right = mid
+		}
+	}
+	return nums[mid]
+}
+
+/**
+面试题12. 矩阵中的路径
+请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。路径可以从矩阵中的任意一格开始，每一步可以在
+矩阵中向左、右、上、下移动一格。如果一条路径经过了矩阵的某一格，那么该路径不能再次进入该格子。例如，在下面的3×4的矩阵中包含一条字符串“bfce”的路径（路径中的字母用加粗标出）。
+[["a","b","c","e"],
+["s","f","c","s"],
+["a","d","e","e"]]
+但矩阵中不包含字符串“abfb”的路径，因为字符串的第一个字符b占据了矩阵中的第一行第二个格子之后，路径不能再次进入这个格子。
+示例 1：
+输入：board = [["A","B","C","E"],
+              ["S","F","C","S"],
+		      ["A","D","E","E"]], word = "ABCCED"
+输出：true
+
+示例 2：
+输入：board = [["a","b"],
+              ["c","d"]], word = "abcd"
+输出：false
+提示：
+1 <= board.length <= 200
+1 <= board[i].length <= 200
+*/
+func exist(board [][]byte, word string) bool {
+	return true
 }
 func main() {
 	obj := Constructor()
