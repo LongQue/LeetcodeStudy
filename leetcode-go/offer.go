@@ -299,19 +299,66 @@ func minArray(nums []int) int {
 提示：
 1 <= board.length <= 200
 1 <= board[i].length <= 200
+
+判断不为空，建同样大小的临时表(bool）记录每个走过的位置（标记位true),如果为true则不走该节点。
+进入下一个节点先标记位true，如果回退，在改回false
 */
 func exist(board [][]byte, word string) bool {
-	return true
+	if len(board) == 0 || len(board[0]) == 0 {
+		return false
+	}
+	words := []byte (word)
+	tempMap := make([][]bool, len(board))
+	for k, v := range board {
+		tempMap[k] = make([]bool, len(v))
+	}
+	curLen := 0
+	getPath := false
+
+	var walk func(r, c int)
+	walk = func(r, c int) {
+		if getPath == true || board[r][c] != words[curLen] {
+			return
+		}
+		tempMap[r][c] = true
+		curLen++
+		if curLen == len(words) {
+			getPath = true
+			return
+		}
+		if r-1 >= 0 && tempMap[r-1][c] == false {
+			walk(r-1, c)
+		}
+		if c-1 >= 0 && tempMap[r][c-1] == false {
+			walk(r, c-1)
+		}
+		if r+1 < len(board) && tempMap[r+1][c] == false {
+			walk(r+1, c)
+		}
+		if c+1 < len(board[0]) && tempMap[r][c+1] == false {
+			walk(r, c+1)
+		}
+		tempMap[r][c] = false
+		curLen--
+	}
+	for r, v := range board {
+		for c := range v {
+			if getPath == true {
+				return true
+			}
+			walk(r, c)
+		}
+	}
+	return getPath
 }
 func main() {
-	obj := Constructor()
-	obj.AppendTail(3)
-	param := obj.DeleteHead()
-	println(param)
-	param = obj.DeleteHead()
-	println(param)
-	param = obj.DeleteHead()
-	println(param)
+	board :=[][]byte{
+		{'A','B','C','E'},
+		{'S','F','C','S'},
+		{'A','D','E','E'}}
+	s := "ABCCED"
+	b := exist(board, s)
+	println(b)
 }
 
 //Definition for singly-linked list.
