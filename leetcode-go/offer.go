@@ -487,7 +487,7 @@ func cuttingRope2(n int) int {
 		temp = num(a - 1)
 		return (temp * 4) % c
 	} else {
-		return num(a)%c
+		return num(a) % c
 	}
 }
 
@@ -510,9 +510,16 @@ func cuttingRope2(n int) int {
 输入：11111111111111111111111111111101
 输出：31
 解释：输入的二进制串 11111111111111111111111111111101 中，共有 31 位为 '1'。
- */
+*/
 func hammingWeight(num uint32) int {
-
+	count := 0
+	for num > 0 {
+		if num&1 == 1 {
+			count++
+		}
+		num = num >> 1
+	}
+	return count
 }
 func main() {
 	println(cuttingRope2(120))
