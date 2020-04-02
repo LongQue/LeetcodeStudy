@@ -378,9 +378,9 @@ func movingCount(m int, n int, k int) int {
 	var getDigitSum func(num int) int
 	getDigitSum = func(num int) int {
 		var sum int
-		for num>0{
-			sum+=n%10
-			n=n/10
+		for num > 0 {
+			sum += n % 10
+			n = n / 10
 		}
 		return sum
 	}
@@ -393,27 +393,130 @@ func movingCount(m int, n int, k int) int {
 		return false
 	}
 	//移动到当前
-	var walk func(m,n,count,curM, curN int,tempMap [][]bool) int
-	walk = func(m,n,count,curM, curN int,tempMap [][]bool) int {
+	var walk func(m, n, count, curM, curN int, tempMap [][]bool) int
+	walk = func(m, n, count, curM, curN int, tempMap [][]bool) int {
 		if check(curM, curN) {
-			tempMap[curM][curN]=true
-			count = 1 + walk(m,n,count,curM-1, curN,tempMap) + walk(m,n,count,curM+1, curN,tempMap) + walk(m,n,count,curM, curN-1,tempMap) + walk(m,n,count,curM, curN+1, tempMap)
+			tempMap[curM][curN] = true
+			count = 1 + walk(m, n, count, curM-1, curN, tempMap) + walk(m, n, count, curM+1, curN, tempMap) + walk(m, n, count, curM, curN-1, tempMap) + walk(m, n, count, curM, curN+1, tempMap)
 		}
 		return count
 	}
-	count :=walk(m,n,0,0,0,tempMap)
+	count := walk(m, n, 0, 0, 0, tempMap)
 	return count
 
 }
 
+/**
+面试题14- I. 剪绳子
+给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n>1并且m>1），每段绳子的长度记为 k[0],k[1]
+...k[m] 。请问 k[0]*k[1]*...*k[m] 可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3
+的三段，此时得到的最大乘积是18。
+
+示例 1：
+输入: 2
+输出: 1
+解释: 2 = 1 + 1, 1 × 1 = 1
+
+示例 2:
+输入: 10
+输出: 36
+解释: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36
+提示：
+2 <= n <= 58
+*/
+func cuttingRope(n int) int {
+	if n < 2 {
+		return 0
+	}
+	if n == 2 {
+		return 1
+	}
+	if n == 3 {
+		return 2
+	}
+	result := []int{0, 1, 2, 3}
+	var max int
+	for i := 4; i <= n; i++ {
+		max = 0
+		for j := 1; j <= i/2; j++ {
+			temp := result[j] * result[i-j]
+			if max < temp {
+				max = temp
+			}
+		}
+		result = append(result, max)
+	}
+	return result[n]
+}
+
+/**
+面试题14- II. 剪绳子 II
+
+给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n>1并且m>1），每段绳子的长度记为 k[0],k[1]...k[m] 。
+请问 k[0]*k[1]*...*k[m] 可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
+答案需要取模 1e9+7（1000000007），如计算初始结果为：1000000008，请返回 1。
+
+示例 1：
+输入: 2
+输出: 1
+解释: 2 = 1 + 1, 1 × 1 = 1
+
+示例 2:
+输入: 10
+输出: 36
+解释: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36
+提示：
+2 <= n <= 1000
+*/
+func cuttingRope2(n int) int {
+	if n <= 3 {
+		return n - 1
+	}
+	temp, a, b, c := 1, n/3, n%3, 1000000007
+	var num func(a int) int
+	num = func(a int) int {
+		for i := 0; i < a; i++ {
+			temp = (temp * 3) % c
+		}
+		return temp
+	}
+	if b == 2 {
+		temp = num(a)
+		return (temp * 2) % c
+	} else if b == 1 {
+		temp = num(a - 1)
+		return (temp * 4) % c
+	} else {
+		return num(a)%c
+	}
+}
+
+/**
+面试题15. 二进制中1的个数
+请实现一个函数，输入一个整数，输出该数二进制表示中 1 的个数。例如，把 9 表示成二进制是 1001，有 2 位是 1。
+因此，如果输入 9，则该函数输出 2。
+
+示例 1：
+输入：00000000000000000000000000001011
+输出：3
+解释：输入的二进制串 00000000000000000000000000001011 中，共有三位为 '1'。
+
+示例 2：
+输入：00000000000000000000000010000000
+输出：1
+解释：输入的二进制串 00000000000000000000000010000000 中，共有一位为 '1'。
+
+示例 3：
+输入：11111111111111111111111111111101
+输出：31
+解释：输入的二进制串 11111111111111111111111111111101 中，共有 31 位为 '1'。
+ */
+func hammingWeight(num uint32) int {
+
+}
 func main() {
-	board := [][]byte{
-		{'A', 'B', 'C', 'E'},
-		{'S', 'F', 'C', 'S'},
-		{'A', 'D', 'E', 'E'}}
-	s := "ABCCED"
-	b := exist(board, s)
-	println(b)
+	println(cuttingRope2(120))
+
 }
 
 //Definition for singly-linked list.
