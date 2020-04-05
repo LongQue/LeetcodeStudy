@@ -521,6 +521,76 @@ func hammingWeight(num uint32) int {
 	}
 	return count
 }
+
+/**
+面试题16. 数值的整数次方
+实现函数double Power(double base, int exponent)，求base的exponent次方。不得使用库函数，同时不需要考虑大
+数问题。
+
+示例 1:
+输入: 2.00000, 10
+输出: 1024.00000
+
+示例 2:
+输入: 2.10000, 3
+输出: 9.26100
+
+示例 3:
+输入: 2.00000, -2
+输出: 0.25000
+解释: 2-2 = 1/22 = 1/4 = 0.25
+说明:
+-100.0 < x < 100.0
+n 是 32 位有符号整数，其数值范围是 [−231, 231 − 1] 。
+*/
+func myPow(x float64, n int) float64 {
+	if n < 0 {
+		return myPow16(1.0/x, -n)
+	} else if n == 0 {
+		return 1
+	} else {
+		return myPow16(x, n)
+	}
+
+}
+func myPow16(x float64, n int) float64 {
+	if n == 1 {
+		return x
+	} else if n&1 == 0 {
+		return myPow16(x*x, n>>1)
+	} else {
+		return x * myPow16(x, n-1)
+	}
+}
+
+/**
+面试题17. 打印从1到最大的n位数
+输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印出 1、2、3 一直到最大的 3 位数 999。
+
+示例 1:
+输入: n = 1
+输出: [1,2,3,4,5,6,7,8,9]
+
+说明：
+用返回一个整数列表来代替打印
+n 为正整数
+*/
+func printNumbers(n int) []int {
+	if n == 0 {
+		return []int{}
+	}
+	sum := 1
+	for n > 0 {
+		sum = sum * 10
+		n--
+	}
+	result :=make([]int,0,sum)
+
+	for i := 1; i < sum; i++ {
+		result =append(result,i)
+	}
+	return result
+}
 func main() {
 	println(cuttingRope2(120))
 
