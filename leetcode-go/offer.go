@@ -238,7 +238,7 @@ func numWays(n int) int {
 
 /**
 面试题11. 旋转数组的最小数字
-把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如，数组 [3,4,5,1,2] 为 [1,2,3,4,5] 的一个旋转，该数组的最小值为1。  
+把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如，数组 [3,4,5,1,2] 为 [1,2,3,4,5] 的一个旋转，该数组的最小值为1。
 示例 1：
 输入：[3,4,5,1,2]
 输出：1
@@ -307,7 +307,7 @@ func exist(board [][]byte, word string) bool {
 	if len(board) == 0 || len(board[0]) == 0 {
 		return false
 	}
-	words := []byte (word)
+	words := []byte(word)
 	tempMap := make([][]bool, len(board))
 	for k, v := range board {
 		tempMap[k] = make([]bool, len(v))
@@ -584,13 +584,94 @@ func printNumbers(n int) []int {
 		sum = sum * 10
 		n--
 	}
-	result :=make([]int,0,sum)
+	result := make([]int, 0, sum)
 
 	for i := 1; i < sum; i++ {
-		result =append(result,i)
+		result = append(result, i)
 	}
 	return result
 }
+
+/**
+面试题18. 删除链表的节点
+给定单向链表的头指针和一个要删除的节点的值，定义一个函数删除该节点。
+返回删除后的链表的头节点。
+注意：此题对比原题有改动
+
+示例 1:
+输入: head = [4,5,1,9], val = 5
+输出: [4,1,9]
+解释: 给定你链表中值为 5 的第二个节点，那么在调用了你的函数之后，该链表应变为 4 -> 1 -> 9.
+
+示例 2:
+输入: head = [4,5,1,9], val = 1
+输出: [4,5,9]
+解释: 给定你链表中值为 1 的第三个节点，那么在调用了你的函数之后，该链表应变为 4 -> 5 -> 9.
+
+说明：
+题目保证链表中节点的值互不相同
+若使用 C 或 C++ 语言，你不需要 free 或 delete 被删除的节点
+*/
+func deleteNode(head *ListNode, val int) *ListNode {
+	if head.Val == val {
+		head = head.Next
+		return head
+	}
+	var temp = head
+	for temp.Next != nil {
+		if temp.Next.Val == val {
+			temp.Next = temp.Next.Next
+			break
+		}
+		temp = temp.Next
+	}
+	return head
+}
+
+/**
+面试题19. 正则表达式匹配
+给你一个字符串 s 和一个字符规律 p，请你来实现一个支持 '.' 和 '*' 的正则表达式匹配。
+'.' 匹配任意单个字符
+'*' 匹配零个或多个前面的那一个元素
+所谓匹配，是要涵盖 整个 字符串 s的，而不是部分字符串。
+说明:
+s 可能为空，且只包含从 a-z 的小写字母。
+p 可能为空，且只包含从 a-z 的小写字母，以及字符 . 和 *。
+
+示例 1:
+输入:
+s = "aa"
+p = "a"
+输出: false
+解释: "a" 无法匹配 "aa" 整个字符串。
+
+示例 2:
+输入:
+s = "aa"
+p = "a*"
+输出: true
+解释: 因为 '*' 代表可以匹配零个或多个前面的那一个元素, 在这里前面的元素就是 'a'。因此，字符串 "aa" 可被视为 'a' 重复了一次。
+
+示例 3:
+输入:
+s = "ab"
+p = ".*"
+输出: true
+解释: ".*" 表示可匹配零个或多个（'*'）任意字符（'.'）。
+
+示例 4:
+输入:
+s = "aab"
+p = "c*a*b"
+输出: true
+解释: 因为 '*' 表示零个或多个，这里 'c' 为 0 个, 'a' 被重复一次。因此可以匹配字符串 "aab"。
+
+示例 5:
+输入:
+s = "mississippi"
+p = "mis*is*p*."
+输出: false
+*/
 func main() {
 	println(cuttingRope2(120))
 
