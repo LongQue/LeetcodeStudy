@@ -897,7 +897,7 @@ func isSubStructure(A *TreeNode, B *TreeNode) bool {
 	result := false
 	if A != nil && B != nil {
 		if A.Val == B.Val {
-			result=isSubStructure2(A,B)
+			result = isSubStructure2(A, B)
 		}
 		if !result {
 			result = isSubStructure(A.Left, B)
@@ -908,18 +908,19 @@ func isSubStructure(A *TreeNode, B *TreeNode) bool {
 	}
 	return result
 }
+
 /* 从该节点开始判断是否是子结构*/
-func isSubStructure2(A *TreeNode, B *TreeNode) bool{
-	if B== nil {
+func isSubStructure2(A *TreeNode, B *TreeNode) bool {
+	if B == nil {
 		return true
 	}
-	if A== nil {
+	if A == nil {
 		return false
 	}
-	if A.Val !=B.Val {
+	if A.Val != B.Val {
 		return false
 	}
-	return isSubStructure2(A.Left,B.Left)&&isSubStructure2(A.Right,B.Right)
+	return isSubStructure2(A.Left, B.Left) && isSubStructure2(A.Right, B.Right)
 }
 
 /**
@@ -945,21 +946,22 @@ func isSubStructure2(A *TreeNode, B *TreeNode) bool{
 输出：[4,7,2,9,6,3,1]
 限制：
 0 <= 节点个数 <= 1000
- */
+*/
 func mirrorTree(root *TreeNode) *TreeNode {
 	if root == nil {
 		return root
 	}
 
-	root.Left,root.Right = root.Right,root.Left
+	root.Left, root.Right = root.Right, root.Left
 	if root.Left != nil {
-		root.Left=mirrorTree(root.Left)
+		root.Left = mirrorTree(root.Left)
 	}
 	if root.Right != nil {
-		root.Right=mirrorTree(root.Right)
+		root.Right = mirrorTree(root.Right)
 	}
 	return root
 }
+
 /**
 面试题28. 对称的二叉树
 请实现一个函数，用来判断一棵二叉树是不是对称的。如果一棵二叉树和它的镜像一样，那么它是对称的。
@@ -986,20 +988,70 @@ func mirrorTree(root *TreeNode) *TreeNode {
 0 <= 节点个数 <= 1000
 */
 func isSymmetric(root *TreeNode) bool {
-	if root ==nil{
+	if root == nil {
 		return true
 	}
-	return isSymmetric2(root.Left,root.Right)
+	return isSymmetric2(root.Left, root.Right)
 }
 
-func isSymmetric2(left *TreeNode,right *TreeNode) bool {
-	if left==nil&&right== nil {
+func isSymmetric2(left *TreeNode, right *TreeNode) bool {
+	if left == nil && right == nil {
 		return true
 	}
-	if left!=nil&&right!=nil&&left.Val==right.Val {
-		return isSymmetric2(left.Left,right.Right)&&isSymmetric2(left.Right,right.Left)
+	if left != nil && right != nil && left.Val == right.Val {
+		return isSymmetric2(left.Left, right.Right) && isSymmetric2(left.Right, right.Left)
 	}
 	return false
+}
+
+/**
+面试题29. 顺时针打印矩阵
+输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字。
+
+示例 1：
+输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+输出：[1,2,3,6,9,8,7,4,5]
+
+示例 2：
+输入：matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+输出：[1,2,3,4,8,12,11,10,9,5,6,7]
+
+限制：
+0 <= matrix.length <= 100
+0 <= matrix[i].length <= 100
+*/
+func spiralOrder(matrix [][]int) []int {
+	if len(matrix) == 0 {
+		return nil
+	}
+
+	step := 0
+	size := len(matrix) * len(matrix[0])
+	top, bottom, right, left := 0, len(matrix)-1, len(matrix[0])-1, 0
+	nums := make([]int, size)
+	for step < size {
+		for i := left; i <= right && step < size; i++ {
+			nums[step] = matrix[top][i]
+			step++
+		}
+		top++
+		for i := top; i <= bottom && step < size; i++ {
+			nums[step] = matrix[i][right]
+			step++
+		}
+		right--
+		for i := right; i >= left && step < size; i-- {
+			nums[step] = matrix[bottom][i]
+			step++
+		}
+		bottom--
+		for i := bottom; i >= top && step < size; i-- {
+			nums[step] = matrix[i][left]
+			step++
+		}
+		left++
+	}
+	return nums
 }
 
 func main() {
