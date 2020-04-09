@@ -1053,9 +1053,83 @@ func spiralOrder(matrix [][]int) []int {
 	}
 	return nums
 }
+/**
+面试题30. 包含min函数的栈
+定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
+
+示例:
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.min();   --> 返回 -3.
+minStack.pop();
+minStack.top();      --> 返回 0.
+minStack.min();   --> 返回 -2.
+
+提示：
+各函数的调用总次数不超过 20000 次
+
+用辅助栈记录主栈每个元素时的最小值
+*/
+type MinStack struct {
+	slave []int
+	master []int
+}
+
+
+/** initialize your data structure here. */
+func Constructor1() MinStack {
+	return MinStack{
+		slave:make([]int,0,10),
+		master:make([]int,0,10),
+	}
+}
+
+
+func (this *MinStack) Push(x int)  {
+	this.master=append(this.master, x)
+	if len(this.slave)== 0 {
+		this.slave=append(this.slave,x)
+	}else if this.slave[len(this.slave)-1]< x {
+		this.slave=append(this.slave,this.slave[len(this.slave)-1])
+	} else {
+		this.slave=append(this.slave,x)
+	}
+
+
+}
+
+
+func (this *MinStack) Pop()  {
+  	this.master=this.master[:len(this.master)-1]
+  	this.slave=this.slave[:len(this.slave)-1]
+}
+
+
+func (this *MinStack) Top() int {
+	return this.master[len(this.master)-1]
+}
+
+
+func (this *MinStack) Min() int {
+	return this.slave[len(this.slave)-1]
+
+}
 
 func main() {
-	println(cuttingRope2(120))
+	a:=Constructor1()
+	a.Push(2)
+	a.Push(0)
+	a.Push(3)
+	a.Push(0)
+	println(a.Min())
+	a.Pop()
+	println(a.Min())
+	a.Pop()
+	println(a.Min())
+	a.Pop()
+	println(a.Min())
 
 }
 
