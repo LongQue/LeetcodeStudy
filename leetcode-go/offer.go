@@ -1053,6 +1053,7 @@ func spiralOrder(matrix [][]int) []int {
 	}
 	return nums
 }
+
 /**
 面试题30. 包含min函数的栈
 定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
@@ -1073,49 +1074,44 @@ minStack.min();   --> 返回 -2.
 用辅助栈记录主栈每个元素时的最小值
 */
 type MinStack struct {
-	slave []int
+	slave  []int
 	master []int
 }
-
 
 /** initialize your data structure here. */
 func Constructor1() MinStack {
 	return MinStack{
-		slave:make([]int,0,10),
-		master:make([]int,0,10),
+		slave:  make([]int, 0, 10),
+		master: make([]int, 0, 10),
 	}
 }
 
-
-func (this *MinStack) Push(x int)  {
-	this.master=append(this.master, x)
-	if len(this.slave)== 0 {
-		this.slave=append(this.slave,x)
-	}else if this.slave[len(this.slave)-1]< x {
-		this.slave=append(this.slave,this.slave[len(this.slave)-1])
+func (this *MinStack) Push(x int) {
+	this.master = append(this.master, x)
+	if len(this.slave) == 0 {
+		this.slave = append(this.slave, x)
+	} else if this.slave[len(this.slave)-1] < x {
+		this.slave = append(this.slave, this.slave[len(this.slave)-1])
 	} else {
-		this.slave=append(this.slave,x)
+		this.slave = append(this.slave, x)
 	}
 
-
 }
 
-
-func (this *MinStack) Pop()  {
-  	this.master=this.master[:len(this.master)-1]
-  	this.slave=this.slave[:len(this.slave)-1]
+func (this *MinStack) Pop() {
+	this.master = this.master[:len(this.master)-1]
+	this.slave = this.slave[:len(this.slave)-1]
 }
-
 
 func (this *MinStack) Top() int {
 	return this.master[len(this.master)-1]
 }
 
-
 func (this *MinStack) Min() int {
 	return this.slave[len(this.slave)-1]
 
 }
+
 /**
 面试题31. 栈的压入、弹出序列
 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如，序列
@@ -1137,31 +1133,69 @@ push(5), pop() -> 5, pop() -> 3, pop() -> 2, pop() -> 1
 0 <= pushed.length == popped.length <= 1000
 0 <= pushed[i], popped[i] < 1000
 pushed 是 popped 的排列。
- */
+*/
 func validateStackSequences(pushed []int, popped []int) bool {
-	temp :=make([]int,0,len(pushed))
+	temp := make([]int, 0, len(pushed))
 
-	popIndex :=0
+	popIndex := 0
 	for _, v := range pushed {
-		if v==popped[popIndex] {
+		if v == popped[popIndex] {
 			popIndex++
-			for len(temp)!=0 {
-				if temp[len(temp)-1]== popped[popIndex] {
-					temp=temp[:len(temp)-1]
+			for len(temp) != 0 {
+				if temp[len(temp)-1] == popped[popIndex] {
+					temp = temp[:len(temp)-1]
 					popIndex++
-				}else {
+				} else {
 					break
 				}
 			}
-		}else {
-			temp=append(temp,v)
+		} else {
+			temp = append(temp, v)
 		}
 	}
 
-	return len(temp)==0
+	return len(temp) == 0
+}
+
+/**
+面试题32 - I. 从上到下打印二叉树
+从上到下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。
+例如:
+给定二叉树: [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回：
+[3,9,20,15,7]
+提示：
+节点总数 <= 1000
+*/
+func levelOrder(root *TreeNode) []int {
+	if root == nil {
+		return nil
+	}
+	var result []int
+	queue := []*TreeNode{root}
+	for len(queue) != 0 {
+		var temp []*TreeNode
+		for _, v := range queue {
+			result = append(result, v.Val)
+			if v.Left != nil {
+				temp = append(temp, v.Left)
+			}
+			if v.Right != nil {
+				temp = append(temp, v.Right)
+			}
+		}
+		queue = temp
+	}
+	return result
 }
 func main() {
-	a:=Constructor1()
+	a := Constructor1()
 	a.Push(2)
 	a.Push(0)
 	a.Push(3)
