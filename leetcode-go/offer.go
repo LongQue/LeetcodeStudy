@@ -1194,6 +1194,52 @@ func levelOrder(root *TreeNode) []int {
 	}
 	return result
 }
+
+/**
+面试题32 - II. 从上到下打印二叉树 II
+从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。
+
+例如:
+给定二叉树: [3,9,20,null,null,15,7],
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回其层次遍历结果：
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+提示：
+节点总数 <= 1000
+*/
+func levelOrder2(root *TreeNode) [][]int {
+	if root == nil {
+		return nil
+	}
+	var result [][]int
+	queue := []*TreeNode{root}
+	for len(queue) > 0 {
+		var tempInt []int
+		var tempQueue []*TreeNode
+		for _, v := range queue {
+			tempInt = append(tempInt, v.Val)
+			if v.Left != nil {
+				tempQueue = append(tempQueue, v.Left)
+			}
+			if v.Right != nil {
+				tempQueue = append(tempQueue, v.Right)
+			}
+		}
+		queue = tempQueue
+		result = append(result, tempInt)
+	}
+	return result
+
+}
+
 func main() {
 	a := Constructor1()
 	a.Push(2)
