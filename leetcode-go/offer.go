@@ -1374,6 +1374,44 @@ func pathSumWork(root *TreeNode, sum, now int, temp []int, result *[][]int) {
 	pathSumWork(root.Right, sum, now, temp, result)
 }
 
+/**
+面试题35. 复杂链表的复制
+无 GO
+*/
+
+/**
+面试题38. 字符串的排列
+输入一个字符串，打印出该字符串中字符的所有排列。
+你可以以任意顺序返回这个字符串数组，但里面不能有重复元素。
+示例:
+输入：s = "abc"
+输出：["abc","acb","bac","bca","cab","cba"]
+
+限制：
+1 <= s 的长度 <= 8
+*/
+func permutation(s string) []string {
+	var res []string
+	permutationWork([]byte(s), 0, &res)
+	return res
+}
+func permutationWork(s []byte, start int, res *[]string) {
+	if start == len(s) {
+		*res = append(*res, string(s))
+	}
+	m := make(map[byte]int)
+	for i := start; i < len(s); i++ {
+		if _, ok := m[s[i]]; ok {
+			continue
+		}
+		s[i], s[start] = s[start], s[i]
+		permutationWork(s, start+1, res)
+		s[i], s[start] = s[start], s[i]
+		m[s[i]] = 1
+	}
+
+}
+
 func main() {
 	i := TreeNode{
 		Val: 2,
