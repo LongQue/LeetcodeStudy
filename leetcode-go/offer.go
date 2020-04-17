@@ -1,6 +1,7 @@
 package main
 
 import (
+	"container/heap"
 	"errors"
 	"strconv"
 	"strings"
@@ -1457,49 +1458,139 @@ func majorityElement(nums []int) int {
 0 <= arr[i] <= 10000
 */
 func getLeastNumbers(arr []int, k int) []int {
-	if k == 0 {
-		return nil
+	if k >= len(arr) {
+		return arr
 	}
-	f := func(arr []int, k int) {}
-	f = func(arr []int, k int) {
-		l, r := 0, len(arr)-1
-		base := arr[0]
-		for l != r {
-			for base >= arr[l] && l < r {
-				l++
+
+	var recur func(arr []int, k int)
+	recur = func(arr []int, k int) {
+
+		s, e := 0, len(arr)-1
+		c := arr[s]
+		for s < e {
+			for s < e {
+				if arr[s] > c {
+					break
+				}
+				s++
 			}
-			for base <= arr[r] && l < r {
-				r--
+
+			for e > s {
+				if arr[e] <= c {
+					break
+				}
+				e--
 			}
-			arr[l], arr[r] = arr[r], arr[l]
+			if e > s {
+				arr[s], arr[e] = arr[e], arr[s]
+			}
 		}
-		arr[0], arr[l-1] = arr[l-1], arr[0]
-		if r > k {
+		if arr[e] < arr[0] {
+			arr[0], arr[e] = arr[e], arr[0]
+		}
+		if e > k {
+			recur(arr[0:e], k)
+		} else if e < k {
+			recur(arr[e:], k-e)
+		} else {
 			return
 		}
-
 	}
-
+	recur(arr, k)
+	return arr[0:k]
 }
 
-func getLeastNumbersWork(left, right, k int, arr []int) []int {
-	base := arr[left]
-	l, r := left, right
-	for {
-		for base >= arr[l] && l < r {
-			l++
-		}
-		for base <= arr[r] && l < r {
-			r--
-		}
-		if l == r {
-			arr[left], arr[l-1] = arr[l-1], arr[left]
-			break
-		}
-		arr[l], arr[r] = arr[r], arr[l]
+/**
+面试题41. 数据流中的中位数
+如何得到一个数据流中的中位数？如果从数据流中读出奇数个数值，那么中位数就是所有数值排序之后位于中间的数值。如果从数据流中读出偶数个数值，那么中位数就是所有数值排序之后中间两个数的平均值。
+
+例如，
+[2,3,4] 的中位数是 3
+[2,3] 的中位数是 (2 + 3) / 2 = 2.5
+设计一个支持以下两种操作的数据结构：
+void addNum(int num) - 从数据流中添加一个整数到数据结构中。
+double findMedian() - 返回目前所有元素的中位数。
+
+示例 1：
+输入：
+["MedianFinder","addNum","addNum","findMedian","addNum","findMedian"]
+[[],[1],[2],[],[3],[]]
+输出：[null,null,null,1.50000,null,2.00000]
+
+示例 2：
+输入：
+["MedianFinder","addNum","findMedian","addNum","findMedian"]
+[[],[2],[],[3],[]]
+输出：[null,null,2.00000,null,2.50000]
+
+限制：
+最多会对 addNum、findMedia进行 50000 次调用。
+
+最大堆和最小堆
+*/
+
+type MaxHeap []int
+type MinHeap []int
+
+func (h MaxHeap) Len() int           { return len(h) }
+func (h MaxHeap) Less(i, j int) bool { return h[i] > h[j] }
+func (h MaxHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x interface{}) {
+	*h = append(*h, x.(int))
+}
+func (h *MaxHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
+
+func (h MinHeap) Len() int           { return len(h) }
+func (h MinHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h MinHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) {
+	*h = append(*h, x.(int))
+}
+func (h *MinHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
+
+type MedianFinder struct {
+	lower MaxHeap
+	upper MinHeap
+}
+
+/** initialize your data structure here. */
+func Constructor3() MedianFinder {
+	return MedianFinder{make([]int, 0), make([]int, 0)}
+}
+
+func (this *MedianFinder) AddNum(num int) { // len(lower) >= len(upper)
+	if len(this.lower) == 0 || this.lower[0] >= num {
+		heap.Push(&this.lower, num)
+	} else {
+		heap.Push(&this.upper, num)
 	}
-	if r > k {
-		getLeastNumbersWork()
+
+	if len(this.upper) > len(this.lower) {
+		v := heap.Pop(&this.upper)
+		heap.Push(&this.lower, v)
+	} else if len(this.lower) > len(this.upper)+1 {
+		v := heap.Pop(&this.lower)
+		heap.Push(&this.upper, v)
+	}
+}
+
+func (this *MedianFinder) FindMedian() float64 {
+	if len(this.lower) > len(this.upper) {
+		return float64(this.lower[0])
+	} else {
+		return float64(this.lower[0]+this.upper[0]) / 2.0
 	}
 }
 
