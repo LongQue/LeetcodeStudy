@@ -3,6 +3,7 @@ package main
 import (
 	"container/heap"
 	"errors"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -1671,12 +1672,62 @@ func countDigitOne(n int) int {
 	return count
 }
 
-func main() {
-	arr := []int{0, 1, 2, 3, 4, 0, 3, 3, 8, 1, 4, 6, 2, 8, 8, 15, 10, 0, 9, 9, 1, 2, 17, 8, 17, 25, 18, 18, 16, 13, 18, 29, 2, 3, 32, 2, 26, 23, 18, 8, 34, 8, 11, 36, 36, 39, 46, 30, 21, 25, 21, 14, 41, 10, 31, 55, 45, 16, 33, 47, 4, 52, 59, 60, 1, 43, 42, 10, 12, 56, 12, 27, 22, 52, 38, 12, 41, 42, 71, 5, 42, 76, 8, 3, 31, 65, 11, 29, 28, 68, 33, 50, 73, 87, 22, 68, 31, 1, 38, 89}
-	numbers := getLeastNumbers(arr, 60)
-	for _, v := range numbers {
-		print(v)
+/**
+面试题44. 数字序列中某一位的数字
+数字以0123456789101112131415…的格式序列化到一个字符序列中。在这个序列中，
+第5位（从下标0开始计数）是5，第13位是1，第19位是4，等等。
+请写一个函数，求任意第n位对应的数字。
+
+示例 1：
+输入：n = 3
+输出：3
+
+示例 2：
+输入：n = 11
+输出：0
+
+限制：
+0 <= n < 2^31
+去掉特例0
+判断输入的n大约是落在几位数的范围，直接跳过前面部分
+1-9      9位      10^(位数-1)*位数*9
+10-99    180位
+100-999  2700位
+....
+若 271，先去掉0得269，
+>9,减9 得260
+>180，减180 得80
+<小于2700，说明271是三位数
+计算是三位数第几个 80/位数=26
+计算是数的第几位   80%位数=2
+3位数第一个 100 加 26得到对于的数字 126
+["1","2","6"] s[2]转换成int
+*/
+func findNthDigit(n int) int {
+	if n < 10 {
+		return n
 	}
+	//去掉0
+	n--
+	i := 1
+	for {
+		temp := int(math.Pow(10, float64(i-1))) * i * 9
+		if n <= temp {
+			break
+		}
+		i++
+		n -= temp
+	}
+	a, b := n/i, n%i
+	f := int(math.Pow(10, float64(i-1))) + a
+	s := strconv.Itoa(f)
+	result := string(s[b])
+	i, _ = strconv.Atoi(result)
+	return i
+}
+func main() {
+	digit := findNthDigit(11)
+	print(digit)
 }
 
 //Definition for singly-linked list.
