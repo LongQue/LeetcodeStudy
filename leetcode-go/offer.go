@@ -1762,9 +1762,42 @@ func minNumber(nums []int) string {
 	return res
 }
 
+/**
+
+面试题46. 把数字翻译成字符串
+给定一个数字，我们按照如下规则把它翻译为字符串：0 翻译成 “a” ，1 翻译成 “b”，……，11 翻译成 “l”，……，25 翻译成 “z”。一个数字可能有多个翻译。
+请编程实现一个函数，用来计算一个数字有多少种不同的翻译方法。
+
+示例 1:
+输入: 12258
+输出: 5
+
+解释: 12258有5种不同的翻译，分别是"bccfi", "bwfi", "bczi", "mcfi"和"mzi"
+提示：
+0 <= num < 2^31
+
+类似于青蛙台阶，对于最后一个添加的数，if它和前一个相加超过25或者小于10则说明只能跳一阶，只有一种跳法  f(x)=f(x-1)
+else 则说明可以跳两次一阶或者跳2阶 f(x)=f(x-1)+f(x-2）
+需要注意处理f(2）的特殊情况
+*/
+func translateNum(num int) int {
+	left, right := 0, -1
+	cur := 1
+	last := cur
+	for num > 0 {
+		left = num % 10
+		num /= 10
+		if right >= 0 && ((left*10 + right) >= 10) && ((left*10 + right) <= 25) {
+			cur, last = cur+last, cur
+		} else {
+			last = cur
+		}
+		right = left
+	}
+	return cur
+}
 func main() {
-	digit := findNthDigit(11)
-	print(digit)
+	print(translateNum(12258))
 }
 
 //Definition for singly-linked list.
