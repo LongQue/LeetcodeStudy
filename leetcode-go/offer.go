@@ -1796,8 +1796,60 @@ func translateNum(num int) int {
 	}
 	return cur
 }
+
+/**
+面试题47. 礼物的最大价值
+在一个 m*n 的棋盘的每一格都放有一个礼物，每个礼物都有一定的价值（价值大于 0）。你可以从棋盘的左上角开始拿格子里的礼物，并每次向右或者向下移
+动一格、直到到达棋盘的右下角。给定一个棋盘及其上面的礼物的价值，请计算你最多能拿到多少价值的礼物？
+
+示例 1:
+输入:
+[
+  [1,3,1],
+  [1,5,1],
+  [4,2,1]
+]
+输出: 12
+解释: 路径 1→3→5→2→1 可以拿到最多价值的礼物
+
+提示：
+0 < grid.length <= 200
+0 < grid[0].length <= 200
+
+动态规划
+f(i,j)=max( f(i-1,j),f(i,j-1) ) + grid[i][j]
+无法保证每步最优，需要另外建一个二维数组保存每个f(i,j)的值
+*/
+func maxValue(grid [][]int) int {
+	row := len(grid)
+	col := len(grid[0])
+	maxValues := make([][]int, row)
+	for i := 0; i < len(grid); i++ {
+		maxValues[i] = make([]int, col)
+	}
+	for i := 0; i < row; i++ {
+		for j := 0; j < col; j++ {
+			left, up := 0, 0
+			if i > 0 {
+				up = maxValues[i-1][j]
+			}
+			if j > 0 {
+				left = maxValues[i][j-1]
+			}
+			maxValues[i][j] = Max(up, left) + grid[i][j]
+		}
+	}
+	return maxValues[row-1][col-1]
+}
+func Max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
 func main() {
-	print(translateNum(12258))
+	i := [][]int{{1, 2, 5}, {3, 2, 1}}
+	print(maxValue(i))
 }
 
 //Definition for singly-linked list.
