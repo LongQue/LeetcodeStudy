@@ -1901,6 +1901,53 @@ func lengthOfLongestSubstring(s string) int {
 	}
 	return maxLength
 }
+
+/**
+面试题49. 丑数
+我们把只包含因子 2、3 和 5 的数称作丑数（Ugly Number）。求按从小到大的顺序的第 n 个丑数。
+
+示例:
+输入: n = 10
+输出: 12
+解释: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 是前 10 个丑数。
+
+说明:
+1 是丑数。
+n 不超过1690。
+
+定义分片，三指针指向节点（开始为0），每次用2,3,5乘以相应指针的值，取最小值，然后该指针+1.每次都取最小值使的分片可以按从小到大排序
+*/
+func nthUglyNumber(n int) int {
+	if n == 1 {
+		return 1
+	}
+	nums := []int{1}
+	i2, i3, i5 := 0, 0, 0
+	for n > 1 {
+		a := nums[i2] * 2
+		b := nums[i3] * 3
+		c := nums[i5] * 5
+		res := Min(Min(a, b), c)
+		if res == a {
+			i2++
+		}
+		if res == b {
+			i3++
+		}
+		if res == c {
+			i5++
+		}
+		nums = append(nums, res)
+		n--
+	}
+	return nums[len(nums)-1]
+}
+func Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
 func main() {
 	print(lengthOfLongestSubstring(" "))
 
