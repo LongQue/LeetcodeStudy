@@ -2070,9 +2070,78 @@ func getIntersectionNode(headA, headB *ListNode) *ListNode {
 	}
 	return node1
 }
+
+/**
+面试题53 - I. 在排序数组中查找数字 I
+统计一个数字在排序数组中出现的次数。
+
+示例 1:
+输入: nums = [5,7,7,8,8,10], target = 8
+输出: 2
+
+示例 2:
+输入: nums = [5,7,7,8,8,10], target = 6
+输出: 0
+
+限制：
+0 <= 数组长度 <= 50000
+
+二分查找，找出位于两端的下标
+*/
+func search(nums []int, target int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+	left := searchLeft(nums, 0, len(nums)-1, target)
+	right := searchRight(nums, 0, len(nums)-1, target)
+	if left == -1 || right == -1 {
+		return 0
+	}
+
+	return right - left + 1
+}
+func searchLeft(nums []int, left, right, target int) int {
+	if left > right {
+		return -1
+	}
+
+	mid := (left + right) / 2
+	if nums[mid] == target {
+		if mid == 0 || nums[mid-1] != target {
+			return mid
+		}
+		right = mid - 1
+	} else if nums[mid] > target {
+		right = mid - 1
+	} else {
+		left = mid + 1
+	}
+	return searchLeft(nums, left, right, target)
+}
+
+func searchRight(nums []int, left, right, target int) int {
+	if left > right {
+		return -1
+	}
+
+	mid := (left + right) / 2
+	if nums[mid] == target {
+		if (mid == len(nums)-1) || nums[mid+1] != target {
+			return mid
+		}
+		left = mid + 1
+	} else if nums[mid] > target {
+		right = mid - 1
+	} else {
+		left = mid + 1
+	}
+	return searchRight(nums, left, right, target)
+}
+
 func main() {
-	nums := []int{7, 5, 6, 4}
-	reversePairs(nums)
+	nums := []int{5, 7, 7, 8, 8, 10}
+	print(search(nums, 6))
+
 }
 
 //Definition for singly-linked list.
