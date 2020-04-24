@@ -2138,9 +2138,45 @@ func searchRight(nums []int, left, right, target int) int {
 	return searchRight(nums, left, right, target)
 }
 
+/**
+面试题53 - II. 0～n-1中缺失的数字
+一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0～n-1之内。在范围0～n-1内的n个数字中有且只有一个数字不在该数组中，请找出这个数字。
+
+示例 1:
+输入: [0,1,3]
+输出: 2
+
+示例 2:
+输入: [0,1,2,3,4,5,6,7,9]
+输出: 8
+
+限制：
+1 <= 数组长度 <= 10000
+
+排除是数组第一位为1，即缺0的情况，这样数组前部分是nums[i]=i 后部分是nums[i]=i-1,找出最后一个nums[i]=i时的i，再次基础上加1
+*/
+func missingNumber(nums []int) int {
+	if nums[0] != 0 {
+		return 0
+	}
+	return missingNumberWorker(nums, 0, len(nums)-1)
+}
+func missingNumberWorker(nums []int, left, right int) int {
+	mid := (left + right) / 2
+	if nums[mid] == mid {
+		if mid == right || nums[mid+1] != mid+1 {
+			return mid + 1
+		}
+		left = mid + 1
+	} else {
+		right = mid - 1
+	}
+	return missingNumberWorker(nums, left, right)
+}
 func main() {
-	nums := []int{5, 7, 7, 8, 8, 10}
-	print(search(nums, 6))
+	nums := []int{1, 2}
+	print(missingNumber(nums))
+	//print(len(nums[:3]))
 
 }
 
