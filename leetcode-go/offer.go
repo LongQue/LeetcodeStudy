@@ -2307,18 +2307,51 @@ func isBalancedWorker(root *TreeNode) float64 {
 	return math.Max(l, r) + 1
 }
 
+/**
+面试题56 - I. 数组中数字出现的次数
+一个整型数组 nums 里除两个数字之外，其他数字都出现了两次。请写程序找出这两个只出现一次的数字。
+要求时间复杂度是O(n)，空间复杂度是O(1)。
+
+示例 1：
+输入：nums = [4,1,4,6]
+输出：[1,6] 或 [6,1]
+
+示例 2：
+输入：nums = [1,2,10,4,1,4,3,3]
+输出：[2,10] 或 [10,2]
+
+限制：
+2 <= nums <= 10000
+
+假定是a,b
+异或遍历一遍，得到c=a^b， 找到c从右往左数第一个为1的位，重新赋值a,b为0，再次遍历数据，以某一位是否为1将数据划分为两组，各自与ab异或得出最终结果
+*/
+func singleNumbers(nums []int) []int {
+	temp := 0
+	for _, v := range nums {
+		temp ^= v
+	}
+	bit := 1
+	for (temp & bit) == 0 {
+		bit <<= 1
+	}
+	a, b := 0, 0
+	for _, v := range nums {
+		if v&bit != 0 {
+			a ^= v
+		} else {
+			b ^= v
+		}
+	}
+	result := []int{a, b}
+	return result
+}
 func main() {
-	nums := []int{1, 2, 3}
-	n := nums[:1]
-	for _, i2 := range n {
-		println(i2)
+	nums := []int{1, 2, 5, 2}
+	numbers := singleNumbers(nums)
+	for _, v := range numbers {
+		print(v)
 	}
-	println("##############")
-	m := nums[1:]
-	for _, i2 := range m {
-		println(i2)
-	}
-	//print(len(nums[:3]))
 
 }
 
