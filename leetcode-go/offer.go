@@ -2420,8 +2420,49 @@ func twoSum57(nums []int, target int) []int {
 	return result
 }
 
-func main() {
+/**
+面试题57 - II. 和为s的连续正数序列
+输入一个正整数 target ，输出所有和为 target 的连续正整数序列（至少含有两个数）。
+序列内的数字由小到大排列，不同序列按照首个数字从小到大排列。
 
+示例 1：
+输入：target = 9
+输出：[[2,3,4],[4,5]]
+
+示例 2：
+输入：target = 15
+输出：[[1,2,3,4,5],[4,5,6],[7,8]]
+
+限制：
+1 <= target <= 10^5
+
+从头遍历数组，把每个数都加入分片，需要临时变量count来记录分片中总和，如果count>target，移除分片最左的数据并对count做相应减法。当count==target时添加入返回结果。小于的不作处理
+注意特殊情况，即target = 1 =2时
+*/
+func findContinuousSequence(target int) [][]int {
+	if target <= 2 {
+		return nil
+	}
+	var result [][]int
+	var temp []int
+	count := 0
+	for i := 1; i <= (target+1)>>1; i++ {
+		count += i
+		temp = append(temp, i)
+		for count > target {
+			count -= temp[0]
+			temp = temp[1:]
+		}
+
+		if count == target {
+			result = append(result, temp)
+		}
+	}
+	return result
+}
+
+func main() {
+	findContinuousSequence(9)
 }
 
 //Definition for singly-linked list.
