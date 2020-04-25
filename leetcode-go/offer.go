@@ -2173,9 +2173,102 @@ func missingNumberWorker(nums []int, left, right int) int {
 	}
 	return missingNumberWorker(nums, left, right)
 }
+
+/**
+面试题54. 二叉搜索树的第k大节点
+给定一棵二叉搜索树，请找出其中第k大的节点。
+
+示例 1:
+输入: root = [3,1,4,null,2], k = 1
+   3
+  / \
+ 1   4
+  \
+   2
+输出: 4
+
+示例 2:
+输入: root = [5,3,6,2,4,null,null,1], k = 3
+       5
+      / \
+     3   6
+    / \
+   2   4
+  /
+ 1
+输出: 4
+限制：
+1 ≤ k ≤ 二叉搜索树元素个数
+*/
+func kthLargest(root *TreeNode, k int) int {
+	var result int
+	var flag bool
+	f := func(root *TreeNode) {}
+	f = func(root *TreeNode) {
+		if root.Right != nil {
+			f(root.Right)
+		}
+		k--
+		if k == 0 && flag == false {
+			flag = true
+			result = root.Val
+		}
+		if root.Left != nil {
+			f(root.Left)
+		}
+	}
+	f(root)
+	return result
+}
+
+/**
+面试题55 - I. 二叉树的深度
+输入一棵二叉树的根节点，求该树的深度。从根节点到叶节点依次经过的节点（含根、叶节点）形成树的一条路径，最长路径的长度为树的深度。
+
+例如：
+给定二叉树 [3,9,20,null,null,15,7]，
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回它的最大深度 3 。
+
+提示：
+节点总数 <= 10000
+*/
+func maxDepth(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	deep := 0
+	queue := []*TreeNode{root}
+	for len(queue) != 0 {
+		length := len(queue)
+		for i := 0; i < length; i++ {
+			if queue[i].Left != nil {
+				queue = append(queue, queue[i].Left)
+			}
+			if queue[i].Right != nil {
+				queue = append(queue, queue[i].Right)
+			}
+		}
+		queue = queue[length:]
+		deep++
+	}
+	return deep
+}
 func main() {
-	nums := []int{1, 2}
-	print(missingNumber(nums))
+	nums := []int{1, 2, 3}
+	n := nums[:1]
+	for _, i2 := range n {
+		println(i2)
+	}
+	println("##############")
+	m := nums[1:]
+	for _, i2 := range m {
+		println(i2)
+	}
 	//print(len(nums[:3]))
 
 }
