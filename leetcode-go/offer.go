@@ -2346,12 +2346,42 @@ func singleNumbers(nums []int) []int {
 	result := []int{a, b}
 	return result
 }
-func main() {
-	nums := []int{1, 2, 5, 2}
-	numbers := singleNumbers(nums)
-	for _, v := range numbers {
-		print(v)
+
+/**
+面试题56 - II. 数组中数字出现的次数 II
+在一个数组 nums 中除一个数字只出现一次之外，其他数字都出现了三次。请找出那个只出现一次的数字。
+
+示例 1：
+输入：nums = [3,4,3,3]
+输出：4
+
+示例 2：
+输入：nums = [9,1,7,9,7,9,7]
+输出：1
+
+限制：
+1 <= nums.length <= 10000
+1 <= nums[i] < 2^31
+
+统计每个数组二进制每个位1出现的次数，如果不能整除3，说明只出现一次的数在这个位是1
+*/
+func singleNumber(nums []int) int {
+	result := 0
+	for i := 0; i < 32; i++ {
+		count := 0
+		index := 1 << i
+		for _, v := range nums {
+			if v&index != 0 {
+				count++
+			}
+		}
+		if count%3 == 1 {
+			result |= index
+		}
 	}
+	return result
+}
+func main() {
 
 }
 
