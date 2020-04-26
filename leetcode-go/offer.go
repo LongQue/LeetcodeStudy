@@ -2546,10 +2546,60 @@ func reverseLeftWords(s string, n int) string {
 	return string(by)
 }
 
+/**
+面试题59 - I. 滑动窗口的最大值
+给定一个数组 nums 和滑动窗口的大小 k，请找出所有滑动窗口里的最大值。
+
+示例:
+输入: nums = [1,3,-1,-3,5,3,6,7], 和 k = 3
+输出: [3,3,5,5,6,7]
+解释:
+  滑动窗口的位置                最大值
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+
+提示：
+你可以假设 k 总是有效的，在输入数组不为空的情况下，1 ≤ k ≤ 输入数组的大小。
+遍历记录最大值下标，若遍历少于k-1不添加最大值到结果，若遍历到i>=k开始有数据从左部出来，这时，如果最大值下标出来需要遍历一遍窗口区间找出最大值
+*/
+func maxSlidingWindow(nums []int, k int) []int {
+	if k <= 1 {
+		return nums
+	}
+	var result []int
+	maxIndex := 0
+	for i := range nums {
+		if nums[i] >= nums[maxIndex] {
+			maxIndex = i
+		}
+		if i >= k {
+			if i-maxIndex == k {
+				maxIndex = maxIndex + 1
+				for j := maxIndex + 1; j <= i; j++ {
+					if nums[j] >= nums[maxIndex] {
+						maxIndex = j
+					}
+				}
+			}
+		}
+		if i >= k-1 {
+			result = append(result, nums[maxIndex])
+		}
+	}
+	return result
+}
 func main() {
-	s := "lrloseumgh"
-	words := reverseLeftWords(s, 6)
-	println(words)
+	i := []int{9, 10, 9, -7, -4, -8, 2, -6}
+	//i := []int{1, 3, -1, -3, 5, 3, 6, 7}
+	window := maxSlidingWindow(i, 5)
+	for _, v := range window {
+		println(v)
+	}
 }
 
 //Definition for singly-linked list.
