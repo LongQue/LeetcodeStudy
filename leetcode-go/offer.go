@@ -2593,13 +2593,71 @@ func maxSlidingWindow(nums []int, k int) []int {
 	}
 	return result
 }
+
+/**
+面试题59 - II. 队列的最大值
+请定义一个队列并实现函数 max_value 得到队列里的最大值，要求函数max_value、push_back 和 pop_front 的均摊时间复杂度都是O(1)。
+若队列为空，pop_front 和 max_value 需要返回 -1
+
+示例 1：
+输入:
+["MaxQueue","push_back","push_back","max_value","pop_front","max_value"]
+[[],[1],[2],[],[],[]]
+输出: [null,null,null,2,1,2]
+
+示例 2：
+输入:
+["MaxQueue","pop_front","max_value"]
+[[],[],[]]
+输出: [null,-1,-1]
+
+限制：
+1 <= push_back,pop_front,max_value的总操作数 <= 10000
+1 <= value <= 10^5
+*/
+type MaxQueue struct {
+	//记录数据
+	a []int
+	//辅助队列，记录当前最大值
+	b []int
+}
+
+func Constructor59() MaxQueue {
+	return MaxQueue{make([]int, 0), make([]int, 0)}
+}
+
+func (this *MaxQueue) Max_value() int {
+	if len(this.a) == 0 {
+		return -1
+	}
+	return this.b[0]
+}
+
+//每次新加，检查辅助队列，把小于该数的值全部去掉
+func (this *MaxQueue) Push_back(value int) {
+	this.a = append(this.a, value)
+	for len(this.b) > 0 && this.b[len(this.b)-1] < value {
+		this.b = this.b[:len(this.b)-1]
+	}
+	this.b = append(this.b, value)
+}
+
+func (this *MaxQueue) Pop_front() int {
+	if len(this.a) == 0 {
+		return -1
+	}
+	result := this.a[0]
+	this.a = this.a[1:]
+	if result == this.b[0] {
+		this.b = this.b[1:]
+	}
+	return result
+}
+
 func main() {
 	i := []int{9, 10, 9, -7, -4, -8, 2, -6}
-	//i := []int{1, 3, -1, -3, 5, 3, 6, 7}
-	window := maxSlidingWindow(i, 5)
-	for _, v := range window {
-		println(v)
-	}
+	b := i[:0]
+	println(b)
 }
 
 //Definition for singly-linked list.
