@@ -2698,6 +2698,48 @@ func twoSum60(n int) []float64 {
 	return ret
 }
 
+/**
+面试题61. 扑克牌中的顺子
+从扑克牌中随机抽5张牌，判断是不是一个顺子，即这5张牌是不是连续的。2～10为数字本身，A为1，J为11，Q为12，K为13，而大、小王为 0 ，可以看成任
+意数字。A 不能视为 14。
+
+示例 1:
+输入: [1,2,3,4,5]
+输出: True
+
+示例 2:
+输入: [0,0,1,2,5]
+输出: True
+
+限制：
+数组长度为 5
+数组的数取值为 [0, 13] .
+
+条件1:0不作处理
+条件2：除0外，牌无重复
+条件3：除0外，最大的牌和最小的牌差值最多5张
+*/
+func isStraight(nums []int) bool {
+	max, min := -1, 14
+	temp := make([]int, 14)
+	for _, v := range nums {
+		if v == 0 {
+			continue
+		}
+		if temp[v] == 1 {
+			return false
+		}
+		temp[v] = 1
+		if v > max {
+			max = v
+		}
+		if v < min {
+			min = v
+		}
+	}
+	return max-min+1 <= 5
+}
+
 func main() {
 	i := make([]int, 12)
 	i = append(i, 2)
