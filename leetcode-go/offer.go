@@ -2811,8 +2811,63 @@ func maxProfit(prices []int) int {
 	}
 	return price
 }
+
+/**
+面试题64. 求1+2+…+n
+求 1+2+...+n ，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。
+
+示例 1：
+输入: n = 3
+输出: 6
+
+示例 2：
+输入: n = 9
+输出: 45
+
+限制：
+1 <= n <= 10000
+
+递归，用&&性质，前面false则不执行后面  判断条件&&递归函数
+*/
+func sumNums(n int) int {
+	result := 0
+	var f func(result *int, n int) bool
+	f = func(result *int, n int) bool {
+		*result += n
+		return n > 0 && f(result, n-1)
+	}
+	f(&result, n)
+	return result
+}
+
+/**
+面试题65. 不用加减乘除做加法
+写一个函数，求两个整数之和，要求在函数体内不得使用 “+”、“-”、“*”、“/” 四则运算符号。
+
+示例:
+输入: a = 1, b = 1
+输出: 2
+
+提示：
+a, b 均可能是负数或 0
+结果不会溢出 32 位整数
+
+1、异或计算出 除1 1   0 0 之外的相加
+2、按位与计算出1 1，在左移一位
+3、当按位与为0时则表示计算完成
+*/
+func add(a int, b int) int {
+	for b != 0 {
+		c := a ^ b
+		d := (a & b) << 1
+		a = c
+		b = d
+	}
+	return a
+}
 func main() {
-	println(lastRemaining(5, 3))
+	print(add(-1, 2))
+
 }
 
 //Definition for singly-linked list.
