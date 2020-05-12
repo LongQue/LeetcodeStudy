@@ -35,13 +35,16 @@ func search(nums []int, target int) int {
 		if nums[mid] == target {
 			return mid
 		}
+		//判断 mid所处的位置是左边递增还是右边递增
 		if nums[0] <= nums[mid] {
+			//判断 nums[0]  target nums[mid]  关系
 			if nums[0] <= target && target < nums[mid] {
 				r = mid - 1
 			} else {
 				l = mid + 1
 			}
 		} else {
+			//判断 nums[mid]  target nums[n-1]  关系
 			if nums[mid] < target && target <= nums[n-1] {
 				l = mid + 1
 			} else {
