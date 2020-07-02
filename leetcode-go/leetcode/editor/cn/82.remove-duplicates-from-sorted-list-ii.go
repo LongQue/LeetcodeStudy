@@ -32,16 +32,16 @@ func deleteDuplicates(head *ListNode) *ListNode {
 	}
 	pre := dummy
 	cur := head
-	//分为 pre  cur  temp 保持连续
+	//pre保持在cur前
 	for cur != nil && cur.Next != nil {
 		if cur.Val == cur.Next.Val {
-			//有相同的情况下移动的temp，找到temp.Next.Val不同或者temp.Next==nil
-			temp := cur.Next
-			for temp.Next != nil && temp.Next.Val == temp.Val {
-				temp = temp.Next
+			//有相同的情况下移动的cur，找到cur.Next.Val不同或者cur.Next==nil
+			cur = cur.Next
+			for cur.Next != nil && cur.Next.Val == cur.Val {
+				cur = cur.Next
 			}
-			//跨过cur和temp这段，pre.Next直接指向temp.Next
-			pre.Next = temp.Next
+			//跨过cur这段，pre.Next直接指向cur.Next
+			pre.Next = cur.Next
 			//保持pre在cur前
 			cur = pre.Next
 		} else {
